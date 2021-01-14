@@ -1,0 +1,92 @@
+#assignment1
+import socket
+
+mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+mysock.connect(('data.pr4e.org', 80))
+cmd = 'GET http://data.pr4e.org/intro-short.txt HTTP/1.0\r\n\r\n'.encode()
+mysock.send(cmd)
+
+while True:
+    data = mysock.recv(512)
+    if len(data) < 1:
+        break
+    print(data.decode(),end='')
+
+mysock.close()
+
+
+#assignment2
+# To run this, download the BeautifulSoup zip file
+# http://www.py4e.com/code3/bs4.zip
+# and unzip it in the same directory as this file
+
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+import ssl
+
+# Ignore SSL certificate errors
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+
+url = input('Enter - ')
+html = urlopen(url, context=ctx).read()
+soup = BeautifulSoup(html, "html.parser")
+#print(soup)
+# Retrieve all of the anchor tags
+tags = soup('span')
+#print(tags)
+# store count and sum of the tags
+count=0
+sum=0
+for tag in tags:
+    # Look at the parts of a tag
+    print('TAG:', tag)
+    print('URL:', tag.get('href', None))
+    print('Contents:', tag.contents[0])
+    print('Attrs:', tag.attrs)
+    count=count+1
+    sum=sum+int(tag.contents[0])
+
+print('count:', count)
+print('sum:',sum)
+
+
+
+#assignment3
+# To run this, download the BeautifulSoup zip file
+# http://www.py4e.com/code3/bs4.zip
+# and unzip it in the same directory as this file
+
+import urllib.request, urllib.parse, urllib.error
+from bs4 import BeautifulSoup
+import ssl
+
+# Ignore SSL certificate errors
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+
+url = input('Enter - ')
+
+def find_name(pos,count):
+    #set url to be global variable to solve the UnboundlocalE
+    global url
+    for cc in range(count):
+        html = urllib.request.urlopen(url, context=ctx).read()
+        soup = BeautifulSoup(html, 'html.parser')
+        # Retrieve all of the anchor tags
+        tags = soup('a')
+        nn=0
+        for tag in tags:
+            nn=nn+1
+            if nn<pos: continue
+            print('Retrieving:',tag.get('href', None))
+            url=tag.get('href', None)
+            if nn>=pos: break
+
+pos=input('Enter position:')
+count=input('Enter count:')
+pos=int(pos)
+count=int(count)
+find_name(pos,count)
