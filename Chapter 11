@@ -1,0 +1,32 @@
+#assignment1
+file = input("Enter file:")
+t=open(file)
+lst=list()
+count=0
+sum=0
+import re
+for line in t:
+    line=line.rstrip()
+    x=re.findall('[0-9]+',line)
+    if len(x)>0:
+        #print(x)
+        for num in x:
+            num=float(num)
+            count=count+1
+            sum=sum+num
+
+sum=int(sum)
+print('There are',count,'values with a sum=',sum)
+
+
+import re
+#print( sum( [ ****** *** * in **********('[0-9]+',**************************.read()) ] ) )
+
+
+#assignment2
+import re
+file = input("Enter file:")
+t=open(file)
+#tmp=t.read()
+#print(len(tmp))
+print( sum( [ for line in t: re.findall('[0-9]+',line.read()) ] ) )
